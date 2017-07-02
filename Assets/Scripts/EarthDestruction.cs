@@ -23,7 +23,7 @@ public class EarthDestruction : MonoBehaviour {
         //    ++pieces;
         //}
 
-        health.TakeDamage(25);
+      //  health.TakeDamage(25);
 
         Destroy(this.gameObject);
     }

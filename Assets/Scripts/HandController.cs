@@ -117,7 +117,6 @@ public class HandController : MonoBehaviour
         {
             velocityStr = power;
             pickedUpObj.GetComponent<Rigidbody>().useGravity = false;
-            Debug.Log(pickedUpObj.name);
             if (pickedUpObj.name == "WaterSpell(Clone)")
             {
                 pickedUpObj.GetComponent<ParticleSystem>().Stop();
@@ -155,7 +154,6 @@ public class HandController : MonoBehaviour
 
     void CreateEarthShield()
     {
-        Debug.Log("create earth");
         Vector3 shieldSize = earthShield.GetComponent<Renderer>().bounds.size;
 
         //spawn the shield in the middle of the hand
