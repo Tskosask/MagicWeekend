@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HandController : MonoBehaviour {
+public class HandController : MonoBehaviour
+{
 
     private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 
@@ -14,16 +15,20 @@ public class HandController : MonoBehaviour {
     float power = 2f;
 
     public GameObject earthShield;
+    public GameObject fireSpell;
+    public GameObject waterSpell;
     private bool holdingObject;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         trackedObj = GetComponent<SteamVR_TrackedObject>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (controller == null)
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (controller == null)
         {
             Debug.Log("Controller Initalization failed.");
             return;
@@ -32,34 +37,42 @@ public class HandController : MonoBehaviour {
         //pick up object
         if (controller.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && pickedUpObj != null)
         {
-
             if (pickedUpObj.tag == "ground")
             {
                 CreateEarthShield();
-                
+
+            }
+            else if (pickedUpObj.tag == "firesource")
+            {
+                CreateFireSpell();
+            }
+            else if (pickedUpObj.tag == "watersource")
+            {
+                CreateWaterSpell();
             }
 
             holdingObject = true;
             pickedUpObj.transform.parent = this.transform;
-            
+
 
             pickedUpObj.GetComponent<Rigidbody>().isKinematic = true;
         }
 
         //put down object / throw
-        if (controller.GetPressUp(SteamVR_Controller.ButtonMask.Trigger)) {
+        if (controller.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+        {
 
 
-            if (pickedUpObj != null)
+            if (pickedUpObj != null && pickedUpObj.tag != "noPickup") //you cannot pick up debris
             {
-                Debug.Log(pickedUpObj.transform.name);
+                //  Debug.Log(pickedUpObj.transform.name);
 
                 pickedUpObj.transform.parent = null;
                 holdingObject = false;
-                if (pickedUpObj.transform.name == "EarthShield 1(Clone)") //the shield stays where you put it
+                if (pickedUpObj.transform.name == "EarthShield(Clone)") //the shield stays where you put it
                 {
                     //check velocity to see if they are trying to throw it or move the shield
-                    Debug.Log("velocity  " + controller.velocity);
+                    //    Debug.Log("velocity  " + controller.velocity);
 
                     float stayingVelocity = 1.5f;
 
@@ -75,14 +88,12 @@ public class HandController : MonoBehaviour {
                     ThrowObject();
                 }
             }
-
         }
-
     }
 
     private void OnTriggerEnter(Collider col)
     {
-        if (holdingObject == false)
+        if (holdingObject == false && col.gameObject.tag != "noPickup") //dont pick up debris or if you are holding something
         {
             pickedUpObj = col.gameObject;
         }
@@ -92,24 +103,8 @@ public class HandController : MonoBehaviour {
     {
         if (holdingObject == false) //dont change things if they are still holding an object
         {
-             pickedUpObj = null;
+            pickedUpObj = null;
         }
-    }
-
-    void CreateEarthShield()
-    {
-        Debug.Log(earthShield.GetComponent<Renderer>().bounds.size);
-
-        Vector3 shieldSize = earthShield.GetComponent<Renderer>().bounds.size;
-
-        //spawn the shield in the middle of the hand
-        Vector3 shieldPosition = new Vector3(transform.position.x - (shieldSize.y / 2), transform.position.y - (shieldSize.x), transform.position.z);
-//        Vector3 shieldPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-
-
-        earthShieldObject = Instantiate(earthShield, shieldPosition, new Quaternion(90,90,0,0)); //  new Quaternion(transform.rotation.x, 0, transform.rotation.z, transform.rotation.w));
-        pickedUpObj = earthShieldObject;
-        earthShieldObject = null; //dont need the earth sheild anymore 
     }
 
     void ThrowObject()
@@ -122,7 +117,12 @@ public class HandController : MonoBehaviour {
         {
             velocityStr = power;
             pickedUpObj.GetComponent<Rigidbody>().useGravity = false;
-            Destroy(pickedUpObj, 15); //clean up the object after 15 seconds
+            Debug.Log(pickedUpObj.name);
+            if (pickedUpObj.name == "WaterSpell(Clone)")
+            {
+                pickedUpObj.GetComponent<ParticleSystem>().Stop();
+            }
+            Destroy(pickedUpObj, 10); //clean up the object after 15 seconds
         }
 
         //get controller velocity and apply it to object
@@ -130,6 +130,41 @@ public class HandController : MonoBehaviour {
         //Quaternion throwRotation = transform.rotation;
         //pickedUpObj.GetComponent<Rigidbody>().rotation = throwRotation;
         pickedUpObj.GetComponent<Rigidbody>().velocity = throwVelocity;
+        pickedUpObj = null; //get ready to pick up next object
 
+    }
+
+    void CreateFireSpell()
+    {
+        pickedUpObj = Instantiate(fireSpell, new Vector3(transform.position.x, transform.position.y, transform.position.z), new Quaternion(0, 0, 0, 0));
+        controller.TriggerHapticPulse(3999);
+    }
+
+    void CreateWaterSpell()
+    {
+        //  Vector3 spellSize = waterSpell.GetComponent<ParticleSystemRenderer>().bounds.size;
+
+        Vector3 spellPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+
+        Debug.Log("trasform rot " + transform.rotation);
+        controller.TriggerHapticPulse(3999);
+        pickedUpObj = Instantiate(waterSpell, spellPosition, new Quaternion(transform.rotation.x, transform.rotation.y, transform.rotation.z + .7f, transform.rotation.w));
+
+    }
+
+
+    void CreateEarthShield()
+    {
+        Debug.Log("create earth");
+        Vector3 shieldSize = earthShield.GetComponent<Renderer>().bounds.size;
+
+        //spawn the shield in the middle of the hand
+        Vector3 shieldPosition = new Vector3(transform.position.x - (shieldSize.y / 2), transform.position.y - (shieldSize.x), transform.position.z);
+
+        controller.TriggerHapticPulse(3999);
+
+        earthShieldObject = Instantiate(earthShield, shieldPosition, new Quaternion(90, 90, 0, 0));
+        pickedUpObj = earthShieldObject;
+        earthShieldObject = null; //dont need the earth sheild anymore 
     }
 }
