@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour {
+public class Health : MonoBehaviour
+{
 
     public const int maxHealth = 100;
     public int currentHealth = maxHealth;
 
-    public  void TakeDamage(int amount)
+    public void TakeDamage(int amount)
     {
         //vibrate on damage
 
@@ -20,7 +21,8 @@ public class Health : MonoBehaviour {
         {
             currentHealth = 0;
             Debug.Log("Dead!");
-        } else
+        }
+        else
         {
             Invoke("ToggleHurtOverlay", 0.2f);
         }
