@@ -98,7 +98,16 @@ public class HandController : MonoBehaviour {
 
     void CreateEarthShield()
     {
-        earthShieldObject = Instantiate(earthShield, new Vector3(transform.position.x, transform.position.y, transform.position.z), new Quaternion(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w));
+        Debug.Log(earthShield.GetComponent<Renderer>().bounds.size);
+
+        Vector3 shieldSize = earthShield.GetComponent<Renderer>().bounds.size;
+
+        //spawn the shield in the middle of the hand
+        Vector3 shieldPosition = new Vector3(transform.position.x - (shieldSize.y / 2), transform.position.y - (shieldSize.x), transform.position.z);
+//        Vector3 shieldPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+
+
+        earthShieldObject = Instantiate(earthShield, shieldPosition, new Quaternion(90,90,0,0)); //  new Quaternion(transform.rotation.x, 0, transform.rotation.z, transform.rotation.w));
         pickedUpObj = earthShieldObject;
         earthShieldObject = null; //dont need the earth sheild anymore 
     }

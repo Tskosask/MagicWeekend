@@ -21,8 +21,8 @@ public class simpleAI : MonoBehaviour {
 	private float lastAttack;
 	// Use this for initialization
 	void Start () {
-		Debug.Log("Player Position" + player.position);
-		Debug.Log("agent Position" + this.transform.position);
+	//	Debug.Log("Player Position" + player.position);
+	//	Debug.Log("agent Position" + this.transform.position);
 		randomPosition();
 	}
 	
@@ -81,9 +81,9 @@ public class simpleAI : MonoBehaviour {
 		animator.SetTrigger("Attack1Trigger");
 		StartCoroutine (pause(1.2f));
 		isAttacking = false;
-		Debug.Log("Player Position" + player.position);
-		Debug.Log("agent Position" + this.transform.position);
-		Debug.Log("dir " + (player.position - this.transform.position));
+		//Debug.Log("Player Position" + player.position);
+		//Debug.Log("agent Position" + this.transform.position);
+		//Debug.Log("dir " + (player.position - this.transform.position));
 	}
 	
 	public IEnumerator pause(float pauseTime){
