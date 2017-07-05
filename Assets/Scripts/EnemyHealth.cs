@@ -10,7 +10,6 @@ public class EnemyHealth : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("tag" + collision.gameObject.tag);
         if (collision.gameObject.tag == "magicProjectile")
         {
             TakeDamage(100);
@@ -19,13 +18,13 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        Debug.Log("took damage");
+      //  Debug.Log("took damage");
         currentHealth -= amount;
         if (currentHealth <= 0)
         {
             currentHealth = 0;
             Debug.Log("Dead!");
-            Destroy(this);
+            Destroy(this.gameObject);
         }
     }
 

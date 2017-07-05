@@ -34,4 +34,12 @@ public class Health : MonoBehaviour
      //   GameObject.FindGameObjectWithTag("hurtOverlay").GetComponent<Renderer>().enabled = !(GameObject.FindGameObjectWithTag("hurtOverlay").GetComponent<Renderer>().enabled);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "EnemyProjectile")
+        {
+            TakeDamage(25);
+        }
+    }
+
 }
