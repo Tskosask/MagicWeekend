@@ -28,9 +28,10 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    private void OnParticleCollision(GameObject other)
+    private void OnParticleCollision(GameObject obj)
     {
         TakeDamage(.5f); //every particle is a percent of a hit point
+   // needs testing     Destroy(obj, .5f); // destroy paricle after half a second after bounce
     }
 
 
