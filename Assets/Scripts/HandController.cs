@@ -121,6 +121,10 @@ public class HandController : MonoBehaviour
             {
                 pickedUpObj.GetComponent<ParticleSystem>().Stop();
             }
+
+            //throwing magic objects will make the controller vibrate
+            controller.TriggerHapticPulse(3999);
+
             Destroy(pickedUpObj, 10); //clean up the object after 15 seconds
         }
 
@@ -147,7 +151,7 @@ public class HandController : MonoBehaviour
 
         Debug.Log("trasform rot " + transform.rotation);
         controller.TriggerHapticPulse(3999);
-        pickedUpObj = Instantiate(waterSpell, spellPosition, new Quaternion(transform.rotation.x, transform.rotation.y, transform.rotation.z + .7f, transform.rotation.w));
+        pickedUpObj = Instantiate(waterSpell, spellPosition, Quaternion.Euler(45, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
 
     }
 

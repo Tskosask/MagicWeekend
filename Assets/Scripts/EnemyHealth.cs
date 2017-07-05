@@ -5,8 +5,8 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
 
-    public const int maxHealth = 100;
-    public int currentHealth = maxHealth;
+    public const float maxHealth = 100;
+    public float currentHealth = maxHealth;
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -16,16 +16,21 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
       //  Debug.Log("took damage");
         currentHealth -= amount;
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            Debug.Log("Dead!");
+            Debug.Log("Enemy Dead!");
             Destroy(this.gameObject);
         }
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        TakeDamage(.5f); //every particle is a percent of a hit point
     }
 
 
