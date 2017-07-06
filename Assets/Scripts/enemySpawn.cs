@@ -46,7 +46,7 @@ public class enemySpawn : MonoBehaviour {
 	void spawnEnemy(){
 		//TODO: Remove unnecessary tmp var and debug after testing
 		var tmp = getRandomSpawnLocation();
-		Debug.Log("SPAWNING AT: " + tmp);
+		//Debug.Log("SPAWNING AT: " + tmp);
 		Instantiate(enemy,tmp,Quaternion.identity);
 	}
 
