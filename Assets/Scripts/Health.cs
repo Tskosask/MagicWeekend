@@ -31,7 +31,7 @@ public class Health : MonoBehaviour
 
     void ToggleHurtOverlay()
     {
-     //   GameObject.FindGameObjectWithTag("hurtOverlay").GetComponent<Renderer>().enabled = !(GameObject.FindGameObjectWithTag("hurtOverlay").GetComponent<Renderer>().enabled);
+        GameObject.FindGameObjectWithTag("hurtOverlay").GetComponent<Renderer>().enabled = !(GameObject.FindGameObjectWithTag("hurtOverlay").GetComponent<Renderer>().enabled);
     }
 
     private void OnCollisionEnter(Collision collision)
