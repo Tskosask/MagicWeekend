@@ -1,10 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HandController : MonoBehaviour
 {
-
     private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 
     private GameObject earthShieldObject;
@@ -12,7 +12,7 @@ public class HandController : MonoBehaviour
     private SteamVR_TrackedObject trackedObj;
 
     private GameObject pickedUpObj;
-    float power = 2f;
+    float power = 3f;
 
     public GameObject earthShield;
     public GameObject fireSpell;
@@ -28,6 +28,7 @@ public class HandController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (controller == null)
         {
             Debug.Log("Controller Initalization failed.");
@@ -35,12 +36,12 @@ public class HandController : MonoBehaviour
         }
 
         //pick up object
+        //if they are pressing the trigger, there is an item to pick up
         if (controller.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && pickedUpObj != null)
         {
             if (pickedUpObj.tag == "ground")
             {
                 CreateEarthShield();
-
             }
             else if (pickedUpObj.tag == "firesource")
             {
@@ -51,29 +52,26 @@ public class HandController : MonoBehaviour
                 CreateWaterSpell();
             }
 
-            holdingObject = true;
-            pickedUpObj.transform.parent = this.transform;
-
-
-            pickedUpObj.GetComponent<Rigidbody>().isKinematic = true;
+            //only able to grab an object if it has a rigid body
+            if(pickedUpObj.gameObject.GetComponent<Rigidbody>() != null)
+            {
+                holdingObject = true;
+                //connect it to the controller  (the grab)
+                pickedUpObj.transform.parent = this.transform;
+                pickedUpObj.GetComponent<Rigidbody>().isKinematic = true;
+            }
         }
 
         //put down object / throw
         if (controller.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
         {
-
-
             if (pickedUpObj != null && pickedUpObj.tag != "noPickup") //you cannot pick up debris
             {
-                //  Debug.Log(pickedUpObj.transform.name);
-
                 pickedUpObj.transform.parent = null;
                 holdingObject = false;
+
                 if (pickedUpObj.transform.name == "EarthShield(Clone)") //the shield stays where you put it
                 {
-                    //check velocity to see if they are trying to throw it or move the shield
-                    //    Debug.Log("velocity  " + controller.velocity);
-
                     float stayingVelocity = 1.5f;
 
                     if (controller.velocity.x > stayingVelocity || controller.velocity.y > stayingVelocity || controller.velocity.z > stayingVelocity ||
@@ -95,7 +93,7 @@ public class HandController : MonoBehaviour
     {
         if (holdingObject == false && col.gameObject.tag != "noPickup") //dont pick up debris or if you are holding something
         {
-            pickedUpObj = col.gameObject;
+              pickedUpObj = col.gameObject;
         }
     }
 
@@ -111,7 +109,7 @@ public class HandController : MonoBehaviour
     {
         pickedUpObj.GetComponent<Rigidbody>().isKinematic = false;
 
-        float velocityStr = 1;
+        float velocityStr = 1; 
 
         if (pickedUpObj.tag == "magicProjectile") //magic projectiles are not affects by gravity and have more power
         {
@@ -129,29 +127,23 @@ public class HandController : MonoBehaviour
         }
 
         //get controller velocity and apply it to object
-        Vector3 throwVelocity = new Vector3(controller.velocity.x, controller.velocity.y, controller.velocity.z * velocityStr);
-        //Quaternion throwRotation = transform.rotation;
-        //pickedUpObj.GetComponent<Rigidbody>().rotation = throwRotation;
+        Vector3 throwVelocity = controller.velocity * velocityStr;
+
         pickedUpObj.GetComponent<Rigidbody>().velocity = throwVelocity;
         pickedUpObj = null; //get ready to pick up next object
-
     }
 
     void CreateFireSpell()
     {
-        pickedUpObj = Instantiate(fireSpell, new Vector3(transform.position.x, transform.position.y, transform.position.z), new Quaternion(0, 0, 0, 0));
+        pickedUpObj = Instantiate(fireSpell, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
         controller.TriggerHapticPulse(3999);
     }
 
     void CreateWaterSpell()
     {
-        //  Vector3 spellSize = waterSpell.GetComponent<ParticleSystemRenderer>().bounds.size;
-
-        Vector3 spellPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-
-        Debug.Log("trasform rot " + transform.rotation);
+    //    Debug.Log("trasform rot " + transform.rotation);
         controller.TriggerHapticPulse(3999);
-        pickedUpObj = Instantiate(waterSpell, spellPosition, Quaternion.Euler(45, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
+        pickedUpObj = Instantiate(waterSpell, transform.position, Quaternion.Euler(transform.rotation.eulerAngles.x + 45, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
 
     }
 
