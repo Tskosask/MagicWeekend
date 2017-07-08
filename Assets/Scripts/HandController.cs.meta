@@ -1,10 +1,17 @@
 fileFormatVersion: 2
 guid: de13dc4f50d8b064284914e7306418a0
-timeCreated: 1498930811
+timeCreated: 1499490168
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - earthShield: {fileID: 1248776417009592, guid: ef37bc73e96b2ab46a1fd72a44a75551,
+      type: 2}
+  - fireSpell: {fileID: 1734425777533410, guid: 07fc1b71ab4eec344a865e506f1c9765,
+      type: 2}
+  - waterSpell: {fileID: 1248654522866558, guid: 37a8a349162ad2c4bba9e4e2516d3a1c,
+      type: 2}
+  - airSpell: {fileID: 1098756226099212, guid: 3aeb47ab2286c4c4c81fba6f361752ad, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
