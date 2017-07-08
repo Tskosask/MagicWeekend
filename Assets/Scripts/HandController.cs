@@ -17,6 +17,8 @@ public class HandController : MonoBehaviour
     public GameObject earthShield;
     public GameObject fireSpell;
     public GameObject waterSpell;
+    public GameObject airSpell;
+
     private bool holdingObject;
 
     // Use this for initialization
@@ -51,9 +53,13 @@ public class HandController : MonoBehaviour
             {
                 CreateWaterSpell();
             }
+            else if (pickedUpObj.tag == "airsource")
+            {
+                CreateAirSpell();
+            }
 
             //only able to grab an object if it has a rigid body
-            if(pickedUpObj.gameObject.GetComponent<Rigidbody>() != null)
+            if (pickedUpObj.gameObject.GetComponent<Rigidbody>() != null)
             {
                 holdingObject = true;
                 //connect it to the controller  (the grab)
@@ -133,21 +139,21 @@ public class HandController : MonoBehaviour
         pickedUpObj = null; //get ready to pick up next object
     }
 
+    //ricoceting fire ball
     void CreateFireSpell()
     {
-        pickedUpObj = Instantiate(fireSpell, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
+        pickedUpObj = Instantiate(fireSpell, transform.position, transform.rotation);
         controller.TriggerHapticPulse(3999);
     }
 
+    //spout style water particle spell
     void CreateWaterSpell()
     {
-    //    Debug.Log("trasform rot " + transform.rotation);
         controller.TriggerHapticPulse(3999);
         pickedUpObj = Instantiate(waterSpell, transform.position, Quaternion.Euler(transform.rotation.eulerAngles.x + 45, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
-
     }
 
-
+    //creates a throwable shield of earth
     void CreateEarthShield()
     {
         Vector3 shieldSize = earthShield.GetComponent<Renderer>().bounds.size;
@@ -160,5 +166,12 @@ public class HandController : MonoBehaviour
         earthShieldObject = Instantiate(earthShield, shieldPosition, new Quaternion(90, 90, 0, 0));
         pickedUpObj = earthShieldObject;
         earthShieldObject = null; //dont need the earth sheild anymore 
+    }
+
+    //creates a deflection only air spell
+    void CreateAirSpell()
+    {
+        pickedUpObj = Instantiate(airSpell, transform.position, transform.rotation);
+        controller.TriggerHapticPulse(3999);
     }
 }
