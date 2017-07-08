@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: de13dc4f50d8b064284914e7306418a0
-timeCreated: 1499490168
+timeCreated: 1499527112
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
@@ -11,7 +11,7 @@ MonoImporter:
       type: 2}
   - waterSpell: {fileID: 1248654522866558, guid: 37a8a349162ad2c4bba9e4e2516d3a1c,
       type: 2}
-  - airSpell: {fileID: 1098756226099212, guid: 3aeb47ab2286c4c4c81fba6f361752ad, type: 2}
+  - airSpell: {fileID: 1518340863309322, guid: 82a1b57967cf00f48bd1dc7065987038, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
