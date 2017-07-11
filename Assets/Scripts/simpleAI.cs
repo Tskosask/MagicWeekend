@@ -15,7 +15,11 @@ public class simpleAI : MonoBehaviour {
 	public float positionSeekRadius; //Distance of random patrol sphere
 	public float searchRefresh; //length of time before randomly picking new location
 	public Material[] materials;
+    public GameObject[] attacks;
+    public GameObject FirePoint;
 
+    private int enemyType;
+    private GameObject enemyAttack;
 	private Transform player;
 	private bool isAttacking = false;
 	private float timeSinceLastSeek; //time elapsed since last randomPosition
@@ -27,7 +31,10 @@ public class simpleAI : MonoBehaviour {
 	void Start () {
 		//set color of enemy randomly from list of select colors (potential weaknesses based on color)
 		var renderer = this.GetComponentInChildren<Renderer>();
-		renderer.material = materials[Random.Range(0,materials.Length)];
+        enemyType = Random.Range(0, materials.Length);
+        renderer.material = materials[enemyType];
+        //get the attack of the enemy based on the material
+        enemyAttack = attacks[enemyType];
 		//always targe the player instance
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
 		//add some variance to how often enemy moves while attacking
@@ -107,13 +114,22 @@ public class simpleAI : MonoBehaviour {
 	//attack sequence
 	void attack(){
 		animator.SetTrigger("Attack1Trigger");
+        Invoke("throwAttack", .5f);
 		StartCoroutine (pause(1.2f));
 		isAttacking = false;
 		attackCounter++;
 	}
 	
-	//pause for some duration
-	public IEnumerator pause(float pauseTime){
+    void throwAttack()
+    {
+        GameObject attackInstance = Instantiate(enemyAttack, new Vector3(FirePoint.transform.position.x, FirePoint.transform.position.y, FirePoint.transform.position.z), Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + 90, transform.rotation.eulerAngles.z));
+        attackInstance.tag = "enemyAttack";
+        attackInstance.GetComponent<Rigidbody>().velocity = this.transform.forward * 3;
+        Destroy(attackInstance, 10);
+    }
+
+    //pause for some duration
+    public IEnumerator pause(float pauseTime){
 		yield return new WaitForSeconds(pauseTime);
 	}
 }

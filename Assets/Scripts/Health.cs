@@ -21,6 +21,10 @@ public class Health : MonoBehaviour
         {
             currentHealth = 0;
             Debug.Log("Dead!");
+            //pause the game
+            Time.timeScale = 0;
+            //turn off the collider so they cant be hurt any more
+            this.gameObject.GetComponent<Collider>().enabled = false;
         }
         else
         {
@@ -34,9 +38,9 @@ public class Health : MonoBehaviour
         GameObject.FindGameObjectWithTag("hurtOverlay").GetComponent<Renderer>().enabled = !(GameObject.FindGameObjectWithTag("hurtOverlay").GetComponent<Renderer>().enabled);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider col)
     {
-        if (collision.gameObject.tag == "EnemyProjectile")
+        if (col.gameObject.tag == "enemyAttack")
         {
             TakeDamage(25);
         }
