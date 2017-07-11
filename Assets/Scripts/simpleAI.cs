@@ -122,6 +122,7 @@ public class simpleAI : MonoBehaviour {
 	
     void throwAttack()
     {
+
         GameObject attackInstance = Instantiate(enemyAttack, new Vector3(FirePoint.transform.position.x, FirePoint.transform.position.y, FirePoint.transform.position.z), Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + 90, transform.rotation.eulerAngles.z));
         attackInstance.tag = "enemyAttack";
         attackInstance.GetComponent<Rigidbody>().velocity = this.transform.forward * 3;
